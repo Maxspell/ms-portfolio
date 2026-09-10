@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "bem-structure": {
+      "source": "rolemodel/rolemodel-skills",
+      "sourceType": "github",
+      "skillPath": "skills/bem-structure/SKILL.md",
+      "computedHash": "71cfa8c01894fabceb4d53d231f912a476cff5975466b0d80e99314d3851ac7e"
+    },
+    "wordpress-pro": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/wordpress-pro/SKILL.md",
+      "computedHash": "f237f4c4fdecc4eb65f88ab192fc9398dbf89bad9a74d058304d73504a88f86a"
+    }
+  }
+}
