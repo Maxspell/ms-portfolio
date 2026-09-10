@@ -1,0 +1,82 @@
+# =============================================================================
+# WordPress .gitignore (Best Practice for Custom Theme / Site Development)
+# =============================================================================
+
+# --- Environment & Credentials ---
+.env
+.env.*
+!.env.example
+wp-config.php
+wp-config-local.php
+
+# --- WordPress Core & Uploads ---
+# If repo contains full WP install, ignore core and heavy media uploads
+/wp-admin/
+/wp-includes/
+/wp-content/uploads/
+/wp-content/blogs.dir/
+/wp-content/upgrade/
+/wp-content/backup-db/
+/wp-content/backups/
+/wp-content/cache/
+/wp-content/wflogs/
+
+# --- Plugins & Themes (Ignore 3rd party plugins, keep custom theme) ---
+/wp-content/plugins/*
+!/wp-content/plugins/.gitkeep
+# If you develop custom theme directly in root or wp-content/themes:
+/wp-content/themes/*
+!/wp-content/themes/ms-portfolio/
+!/wp-content/themes/.gitkeep
+
+# --- ACF Local JSON (Keep JSON definitions, ignore temporary files) ---
+!**/acf-json/*.json
+
+# --- Dependency Directories & Lockfiles (Local) ---
+node_modules/
+vendor/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Build Artifacts & Caches ---
+.cache/
+dist/
+build/
+*.min.css.map
+*.min.js.map
+
+# --- OS Generated Files ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
+
+# --- IDE & Editor Configs ---
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# --- Logs & Databases ---
+*.log
+*.sql
+*.sql.gz
+*.tar.gz
+*.zip
+sitemap.xml
+sitemap.xml.gz
+
+# --- Antigravity / AI Agent Artifacts & Scratch ---
+.gemini/
+scratch/
