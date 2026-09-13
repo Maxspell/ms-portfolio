@@ -165,3 +165,32 @@ ms-portfolio/
    - Именовать классы строго по методологии **БЭМ** (`.portfolio-card`, `.portfolio-card__title`, `.portfolio-card--featured`).
    - Передавать `ajaxUrl`, `nonce` и строки локализации формы в JS через `wp_localize_script('ms-portfolio-ajax', 'msPortfolioData', [...])`.
    - Модульный Vanilla JS (ES6+) без библиотек и без загрязнения глобальной области видимости `window`.
+
+---
+
+## 6. Дизайн-система темы (Design System Tokens & BEM Components)
+
+Тема использует собственную кастомную дизайн-систему в стилистике **Dark Tech / Glassmorphism / Modern Developer Aesthetic**, спроектированную на CSS Custom Properties и чистой БЭМ-методологии:
+
+### 6.1. Ключевые файлы дизайн-системы
+- `assets/css/variables.css`: Единый источник правды (design tokens) в блоке `:root`.
+  - **Фоны (3 уровня глубины)**: `--bg-base` (`#0a0b10`), `--bg-surface` (`#0d1117`), `--bg-elevated` (`#151b28`), `--bg-inset` (`#0b0f18`).
+  - **Glassmorphism**: `--glass-bg` (`rgba(13, 17, 30, 0.60)`), `--glass-bg-hover`, `--glass-bg-dense`, `--blur-sm` (8px), `--blur-md` (16px), `--blur-lg` (24px).
+  - **Границы**: `--border-subtle` (`rgba(255,255,255,0.06)`), `--border-default` (`0.10`), `--border-hover` (`0.16`), `--border-accent` (`rgba(16,185,129,0.35)`).
+  - **Акценты**: Primary Emerald `--accent-primary` (`#10b981`), Secondary Teal/Cyan `--accent-secondary` (`#06b6d4`), градиенты `--gradient-accent`, `--gradient-accent-border` (для контурного свечения рамок).
+  - **Типографика**: UI/Text — Inter (`--font-sans`), Code/Tags — JetBrains Mono (`--font-mono`). Полная шкала размеров: `--text-display`, `--text-h1`..`--text-h4`, `--text-body`, `--text-sm`, `--text-xs`, `--text-code`.
+  - **Сетка отступов**: 4px-base (`--space-1` до `--space-32`), скругления `--radius-xs` до `--radius-full`.
+  - **Тени и Glow**: `--shadow-sm`/`--shadow-md`/`--shadow-lg`, `--glow-sm`/`--glow-md`/`--glow-lg` (мягкое изумрудное свечение).
+  - **Анимации & Easing**: `--ease-out`, `--ease-spring`, `--transition-fast`, `--transition-base`. Уважение `prefers-reduced-motion`.
+
+- `assets/css/components.css`: Базовые БЭМ-компоненты:
+  - `.btn`: `.btn--primary` (акцентный градиент + glow), `.btn--secondary` (glass + accent border), `.btn--ghost`, размеры `.btn--sm`, `.btn--lg`.
+  - `.card-glass`: карточка с эффектом матового стекла, градиентным бордером через `::before` mask-composite, мягким ховером и подъемом. Модификаторы: `.card-glass--compact`, `.card-glass--interactive`, `.card-glass--static`.
+  - `.badge`: компактные плашки (`.badge--accent`, `.badge--success`, `.badge--outline`).
+  - `.tag`: моноширинные теги стека технологий с иконками.
+  - `.status-indicator`: статус доступности с пульсирующей точкой (`.status-indicator__dot`).
+  - `.terminal-window`: стилизованное окно консоли/редактора (macOS dots, syntax highlighting tokens).
+  - `.form-field`: поля формы с glass-эффектом, фокусным кольцом и мягким свечением (`.form-field__input`, `.form-field__textarea`).
+  - `.progress-bar`: визуализация навыков с градиентным заполнением через CSS-переменную `--progress`.
+  - `.stat-card`: карточка метрики / социального доказательства с крупной цифрой и градиентным текстом.
+  - `.section-heading`: заголовок секции с акцентной чертой (`.section-heading__accent`) без шаблонных капс-плашек.

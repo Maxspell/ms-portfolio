@@ -1,0 +1,1362 @@
+/* ==========================================================================
+   COMPONENTS — ms-portfolio (BEM)
+   ===========================================================================
+   Production-ready component library built with BEM methodology.
+   Every component references design tokens from variables.css.
+
+   BEM convention in this file:
+   - Block:           .component-name
+   - Element:         .component-name__element
+   - Modifier:        &.component-name--modifier (co-located with &)
+   - Element Modifier: &.component-name__element--modifier
+
+   Components included:
+   1.  .btn            — Buttons (primary, secondary, ghost)
+   2.  .card-glass     — Glassmorphic card with hover glow
+   3.  .badge          — Compact labels for tech stack / status
+   4.  .tag            — Technology tag pills
+   5.  .status-indicator — Availability pulse dot
+   6.  .terminal-window — Code/CLI preview block
+   7.  .form-field     — Input & textarea with glass effect
+   8.  .progress-bar   — Skill/expertise bar
+   9.  .stat-card      — Statistics display (number + label)
+   10. .section-heading — Section title with accent line
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. BUTTONS (.btn)
+   ===========================================================================
+   Three variants cover all CTAs:
+   - Primary: gradient fill + glow — for the single most important action
+   - Secondary: glass fill + accent border — for supporting actions
+   - Ghost: transparent + border — for tertiary/navigation links
+
+   Sizing through --sm and --lg modifiers.
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-sm);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-primary);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  background: transparent;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-base),
+    transform var(--transition-spring);
+
+  /* ------- PRIMARY: gradient fill, the hero CTA --------------------------
+     Uses the emerald→teal gradient to draw the eye.
+     Hover lifts and intensifies glow — signals clickability.
+     ---------------------------------------------------------------------- */
+  &.btn--primary {
+    background: var(--gradient-accent);
+    color: #021a12;
+    border-color: transparent;
+    box-shadow: var(--glow-sm);
+  }
+
+  &.btn--primary:hover {
+    background: var(--gradient-accent-vivid);
+    box-shadow: var(--glow-md);
+    transform: translateY(-2px);
+  }
+
+  &.btn--primary:active {
+    transform: translateY(0);
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ------- SECONDARY: glass surface with accent border -------------------
+     Sits behind the primary CTA in visual hierarchy.
+     Glass effect ties it into the card system.
+     ---------------------------------------------------------------------- */
+  &.btn--secondary {
+    background: var(--glass-bg);
+    backdrop-filter: var(--blur-sm);
+    -webkit-backdrop-filter: var(--blur-sm);
+    border-color: var(--border-accent);
+    color: var(--accent-primary);
+  }
+
+  &.btn--secondary:hover {
+    background: var(--glass-bg-hover);
+    border-color: var(--border-accent-hover);
+    box-shadow: var(--glow-sm);
+    transform: translateY(-1px);
+  }
+
+  &.btn--secondary:active {
+    transform: translateY(0);
+  }
+
+  /* ------- GHOST: minimal, transparent ------------------------------------
+     For navigation, breadcrumbs, "Learn more" links. Nearly invisible
+     until hovered — keeps the page clean.
+     ---------------------------------------------------------------------- */
+  &.btn--ghost {
+    background: transparent;
+    border-color: var(--border-default);
+    color: var(--text-secondary);
+  }
+
+  &.btn--ghost:hover {
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  &.btn--ghost:active {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* ------- SIZE MODIFIERS ------------------------------------------------ */
+  &.btn--sm {
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-xs);
+    border-radius: var(--radius-sm);
+  }
+
+  &.btn--lg {
+    padding: var(--space-4) var(--space-8);
+    font-size: var(--text-body);
+    border-radius: var(--radius-md);
+  }
+
+  /* ------- ICON within button -------------------------------------------- */
+  .btn__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    width: 1.125em;
+    height: 1.125em;
+  }
+
+  .btn__icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+
+  /* ------- FOCUS — keyboard accessibility --------------------------------
+     Visible ring that doesn't rely on box-shadow (which we use for glow),
+     so we use outline + offset for maximum compatibility.
+     ---------------------------------------------------------------------- */
+  &:focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 2px;
+  }
+}
+
+
+/* ==========================================================================
+   2. GLASS CARD (.card-glass)
+   ===========================================================================
+   The workhorse layout component. Every content block (services, portfolio
+   items, about-me, expertise) uses this as its container.
+
+   Visual strategy:
+   - Semi-transparent fill + blur → "floating glass panel" feel
+   - ::before pseudo-element paints a gradient border (more nuanced than
+     border-image, allows rounded corners and animation)
+   - Hover intensifies glow and slightly lifts the card
+   ========================================================================== */
+
+.card-glass {
+  position: relative;
+  padding: var(--space-8);
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-base),
+    transform var(--transition-transform);
+  overflow: hidden;
+
+  /* ------- GRADIENT BORDER -----------------------------------------------
+     A ::before pseudo sits behind the card content, painting a gradient
+     along the top-left edge. This creates a premium "edge light" effect
+     that's more sophisticated than a flat border-color.
+     ---------------------------------------------------------------------- */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-accent-border);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+    opacity: 0.5;
+    transition: opacity var(--transition-base);
+  }
+
+  /* ------- HOVER STATE ---------------------------------------------------
+     Border brightens, glow appears, card lifts subtly. The gradient
+     border pseudo also intensifies.
+     ---------------------------------------------------------------------- */
+  &:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md), var(--glow-sm);
+    transform: translateY(-2px);
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+
+  /* ------- CARD ELEMENTS ------------------------------------------------- */
+  .card-glass__header {
+    margin-bottom: var(--space-6);
+  }
+
+  .card-glass__title {
+    font-size: var(--text-h3);
+    font-weight: var(--weight-h3);
+    line-height: var(--leading-h3);
+    color: var(--text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .card-glass__subtitle {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .card-glass__body {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    color: var(--text-secondary);
+  }
+
+  .card-glass__body p {
+    margin: 0 0 var(--space-4);
+  }
+
+  .card-glass__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .card-glass__footer {
+    margin-top: var(--space-6);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .card-glass__image {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-5);
+    background: var(--bg-inset);
+    border: 1px solid var(--border-subtle);
+    aspect-ratio: 16 / 10;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-glass__image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform var(--transition-slow), filter var(--transition-base);
+  }
+
+  /* Interactive zoom and glow on hover */
+  .card-glass--interactive:hover .card-glass__image img {
+    transform: scale(1.04);
+  }
+
+  .card-glass--interactive:hover .card-glass__image {
+    border-color: var(--border-accent);
+    box-shadow: var(--glow-sm);
+  }
+
+  /* ------- COMPACT VARIANT -----------------------------------------------
+     Tighter padding for smaller cards (stats, tech-stack grids).
+     ---------------------------------------------------------------------- */
+  &.card-glass--compact {
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+  }
+
+  /* ------- INTERACTIVE VARIANT -------------------------------------------
+     Cursor pointer + stronger hover response for clickable cards.
+     ---------------------------------------------------------------------- */
+  &.card-glass--interactive {
+    cursor: pointer;
+  }
+
+  &.card-glass--interactive:hover {
+    box-shadow: var(--shadow-lg), var(--glow-md);
+    transform: translateY(-4px);
+  }
+
+  /* ------- NO-HOVER VARIANT ----------------------------------------------
+     Static cards that don't respond to hover (e.g. about-me block).
+     ---------------------------------------------------------------------- */
+  &.card-glass--static {
+    transform: none;
+  }
+
+  &.card-glass--static:hover {
+    transform: none;
+    box-shadow: var(--shadow-sm);
+  }
+}
+
+
+/* ==========================================================================
+   3. BADGE (.badge)
+   ===========================================================================
+   Compact inline labels for technology names, categories, and status
+   indicators. Small enough to sit inside card footers or skill lists
+   without disrupting the reading flow.
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-xs);
+  line-height: var(--leading-xs);
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+
+  /* ------- ACCENT VARIANT ------------------------------------------------
+     Tinted with the primary accent for "active" or "featured" items.
+     ---------------------------------------------------------------------- */
+  &.badge--accent {
+    color: var(--accent-primary);
+    background: var(--accent-primary-subtle);
+    border-color: rgba(16, 185, 129, 0.20);
+  }
+
+  /* ------- SUCCESS VARIANT -----------------------------------------------
+     For positive statuses: "Available", "Online", "Completed".
+     ---------------------------------------------------------------------- */
+  &.badge--success {
+    color: var(--color-success);
+    background: rgba(16, 185, 129, 0.10);
+    border-color: rgba(16, 185, 129, 0.25);
+  }
+
+  /* ------- OUTLINE VARIANT -----------------------------------------------
+     Ghost-style badge: no fill, just a border. Useful when many badges
+     appear together (tech stack list) to avoid visual overload.
+     ---------------------------------------------------------------------- */
+  &.badge--outline {
+    background: transparent;
+    border-color: var(--border-default);
+  }
+
+  &.badge--outline:hover {
+    border-color: var(--border-hover);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
+  }
+
+  /* ------- BADGE ICON ---------------------------------------------------- */
+  .badge__icon {
+    display: inline-flex;
+    width: 0.875em;
+    height: 0.875em;
+    flex-shrink: 0;
+  }
+
+  .badge__icon svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+}
+
+
+/* ==========================================================================
+   4. TAG (.tag)
+   ===========================================================================
+   Technology stack pills — slightly larger than badges, designed for
+   displaying tool/language names with optional icons. Used in the
+   "Tech Stack" section and portfolio card footers.
+   ========================================================================== */
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-code);
+  line-height: var(--leading-xs);
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-spring);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--border-hover);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+  }
+
+  /* ------- TAG ICON ------------------------------------------------------ */
+  .tag__icon {
+    display: inline-flex;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+
+  .tag__icon img,
+  .tag__icon svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .tag__label {
+    /* Explicit element for text — allows flex alignment with icon */
+  }
+}
+
+
+/* ==========================================================================
+   5. STATUS INDICATOR (.status-indicator)
+   ===========================================================================
+   "🟢 Доступний для нових проєктів" banner in the header. A pulsing
+   dot + text combo that immediately signals availability.
+
+   The pulse animation uses a scale + opacity trick on a ::before pseudo
+   to create a radar-ping effect without extra DOM nodes.
+   ========================================================================== */
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-xs);
+  color: var(--color-success);
+
+  .status-indicator__dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: var(--radius-full);
+    background: var(--color-success);
+    flex-shrink: 0;
+  }
+
+  /* Pulse ring — expands and fades out to create a "broadcasting" feel */
+  .status-indicator__dot::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: var(--radius-full);
+    background: var(--color-success);
+    opacity: 0;
+    animation: status-pulse 2s var(--ease-out) infinite;
+  }
+
+  .status-indicator__text {
+    /* Text inherits color from parent */
+  }
+}
+
+@keyframes status-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+
+/* ==========================================================================
+   6. TERMINAL WINDOW (.terminal-window)
+   ===========================================================================
+   A mock terminal/IDE window for showcasing code snippets. Reinforces
+   the "this person writes code professionally" message.
+
+   Structure:
+   - Title bar with three macOS-style dots (decorative but recognizable)
+   - Optional filename label
+   - Scrollable code area with monospace font
+
+   The three dots are pure CSS (no images needed), colored to match
+   the classic red/yellow/green pattern but muted to fit the dark theme.
+   ========================================================================== */
+
+.terminal-window {
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+
+  /* ------- TITLE BAR ----------------------------------------------------- */
+  .terminal-window__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .terminal-window__dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .terminal-window__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-full);
+    /* Muted versions of the classic traffic-light dots */
+  }
+
+  .terminal-window__dot:nth-child(1) {
+    background: #ff5f57;
+    opacity: 0.6;
+  }
+
+  .terminal-window__dot:nth-child(2) {
+    background: #febc2e;
+    opacity: 0.6;
+  }
+
+  .terminal-window__dot:nth-child(3) {
+    background: #28c840;
+    opacity: 0.6;
+  }
+
+  .terminal-window__title {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  /* ------- CODE BODY ----------------------------------------------------- */
+  .terminal-window__body {
+    padding: var(--space-5);
+    overflow-x: auto;
+  }
+
+  .terminal-window__code {
+    font-family: var(--font-mono);
+    font-size: var(--text-code);
+    line-height: var(--leading-code);
+    color: var(--text-secondary);
+    white-space: pre;
+    margin: 0;
+  }
+
+  /* ------- SYNTAX HIGHLIGHT TOKENS --------------------------------------- */
+  .terminal-window__keyword {
+    color: #c792ea;
+  }
+
+  .terminal-window__function {
+    color: #82aaff;
+  }
+
+  .terminal-window__string {
+    color: #c3e88d;
+  }
+
+  .terminal-window__comment {
+    color: var(--text-disabled);
+    font-style: italic;
+  }
+
+  .terminal-window__variable {
+    color: var(--accent-primary);
+  }
+
+  .terminal-window__operator {
+    color: #89ddff;
+  }
+
+  .terminal-window__prompt {
+    color: var(--accent-primary);
+    user-select: none;
+  }
+}
+
+
+/* ==========================================================================
+   7. FORM FIELD (.form-field)
+   ===========================================================================
+   Glass-effect inputs and textareas for the contact form. Focus state
+   uses an accent glow ring to guide attention.
+
+   States:
+   - Default: dark inset background, subtle border
+   - Focus: accent border + soft glow
+   - Valid: green accent (same as primary)
+   - Invalid: error red border + glow
+   ========================================================================== */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  .form-field__label {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: var(--tracking-wide);
+  }
+
+  .form-field__input,
+  .form-field__textarea {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    color: var(--text-primary);
+    background: var(--bg-inset);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition:
+      border-color var(--transition-fast),
+      box-shadow var(--transition-base),
+      background var(--transition-fast);
+  }
+
+  .form-field__input::placeholder,
+  .form-field__textarea::placeholder {
+    color: var(--text-disabled);
+  }
+
+  /* ------- FOCUS STATE ---------------------------------------------------
+     Accent border + subtle inner glow. The glow draws the eye to the
+     active field without being distracting.
+     ---------------------------------------------------------------------- */
+  .form-field__input:focus,
+  .form-field__textarea:focus {
+    border-color: var(--accent-primary);
+    box-shadow:
+      0 0 0 3px var(--accent-primary-muted),
+      var(--glow-inset);
+    background: var(--bg-elevated);
+  }
+
+  /* ------- HOVER STATE --------------------------------------------------- */
+  .form-field__input:hover:not(:focus),
+  .form-field__textarea:hover:not(:focus) {
+    border-color: var(--border-hover);
+  }
+
+  /* ------- VALID STATE --------------------------------------------------- */
+  .form-field__input:valid:not(:placeholder-shown),
+  .form-field__textarea:valid:not(:placeholder-shown) {
+    border-color: rgba(16, 185, 129, 0.40);
+  }
+
+  /* ------- INVALID STATE ------------------------------------------------- */
+  .form-field__input:invalid:not(:placeholder-shown),
+  .form-field__textarea:invalid:not(:placeholder-shown) {
+    border-color: var(--color-error);
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  }
+
+  /* ------- TEXTAREA ------------------------------------------------------ */
+  .form-field__textarea {
+    min-height: 140px;
+    resize: vertical;
+  }
+
+  /* ------- HELPER TEXT --------------------------------------------------- */
+  .form-field__helper {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+  }
+
+  .form-field__error {
+    font-size: var(--text-xs);
+    color: var(--color-error);
+  }
+}
+
+
+/* ==========================================================================
+   8. PROGRESS BAR (.progress-bar)
+   ===========================================================================
+   Skill/expertise visualization. A thin track with a gradient-filled
+   bar inside. The gradient ties into the brand accent system.
+
+   Width of the fill is controlled via inline style `--progress: 85%`
+   on the .progress-bar__fill element, keeping JS-free flexibility.
+   ========================================================================== */
+
+.progress-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+
+  .progress-bar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .progress-bar__label {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .progress-bar__value {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--accent-primary);
+  }
+
+  /* ------- TRACK — the background gutter --------------------------------- */
+  .progress-bar__track {
+    width: 100%;
+    height: 6px;
+    background: var(--bg-inset);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+  }
+
+  /* ------- FILL — gradient-colored bar -----------------------------------
+     Width driven by CSS custom property --progress, set inline:
+     <div class="progress-bar__fill" style="--progress: 90%"></div>
+     ---------------------------------------------------------------------- */
+  .progress-bar__fill {
+    height: 100%;
+    width: var(--progress, 0%);
+    background: var(--gradient-accent);
+    border-radius: var(--radius-full);
+    transition: width var(--duration-slow) var(--ease-out);
+    /* Subtle inner glow makes the bar feel luminous */
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.30);
+  }
+}
+
+
+/* ==========================================================================
+   9. STAT CARD (.stat-card)
+   ===========================================================================
+   Social proof numbers: "95+ PageSpeed", "100% On-time delivery".
+   Large number + small label. Gradient border highlights the card
+   edge, making the numbers feel premium and authoritative.
+   ========================================================================== */
+
+.stat-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6);
+  background: var(--glass-bg);
+  backdrop-filter: var(--blur-sm);
+  -webkit-backdrop-filter: var(--blur-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-base);
+
+  /* Gradient border — same technique as card-glass */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--gradient-accent-border);
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    pointer-events: none;
+    opacity: 0.6;
+    transition: opacity var(--transition-base);
+  }
+
+  &:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md), var(--glow-sm);
+  }
+
+  &:hover::before {
+    opacity: 1;
+  }
+
+  /* ------- STAT ICON (optional) ------------------------------------------ */
+  .stat-card__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: var(--space-4);
+    background: var(--accent-primary-subtle);
+    border: 1px solid rgba(16, 185, 129, 0.15);
+    border-radius: var(--radius-md);
+    color: var(--accent-primary);
+  }
+
+  .stat-card__icon svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
+  /* ------- NUMBER — the big visual anchor --------------------------------
+     Large, bold, accent-colored number immediately captures attention.
+     Using tabular-nums for aligned digit widths.
+     ---------------------------------------------------------------------- */
+  .stat-card__number {
+    font-family: var(--font-sans);
+    font-size: var(--text-h2);
+    font-weight: var(--weight-h1);
+    line-height: 1;
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-tight);
+    font-variant-numeric: tabular-nums;
+    margin-bottom: var(--space-2);
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* ------- LABEL — context for the number -------------------------------- */
+  .stat-card__label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-sm);
+  }
+}
+
+
+/* ==========================================================================
+   10. SECTION HEADING (.section-heading)
+   ===========================================================================
+   Consistent section title treatment across all landing page sections.
+   A short accent line above or beside the heading provides a visual
+   anchor point without the cliché of uppercase eyebrow labels.
+   ========================================================================== */
+
+.section-heading {
+  margin-bottom: var(--space-12);
+
+  /* ------- ACCENT LINE ---------------------------------------------------
+     A small gradient bar above the heading acts as a visual signpost.
+     It's functional — it separates sections and guides the scroll.
+     ---------------------------------------------------------------------- */
+  .section-heading__accent {
+    display: block;
+    width: 48px;
+    height: 3px;
+    background: var(--gradient-accent);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-5);
+  }
+
+  .section-heading__title {
+    font-size: var(--text-h2);
+    font-weight: var(--weight-h2);
+    line-height: var(--leading-h2);
+    color: var(--text-primary);
+    letter-spacing: var(--tracking-tight);
+    margin: 0 0 var(--space-4);
+  }
+
+  .section-heading__description {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: 0;
+  }
+
+  /* ------- CENTERED VARIANT ---------------------------------------------- */
+  &.section-heading--centered {
+    text-align: center;
+  }
+
+  &.section-heading--centered .section-heading__accent {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.section-heading--centered .section-heading__description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+
+/* ==========================================================================
+   11. HEADER & NAVIGATION (.header, .nav)
+   ========================================================================== */
+
+.header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: var(--z-sticky);
+  background: rgba(10, 11, 16, 0.75);
+  backdrop-filter: var(--blur-md);
+  -webkit-backdrop-filter: var(--blur-md);
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background var(--transition-base), border-color var(--transition-base);
+
+  &.header--scrolled {
+    background: rgba(10, 11, 16, 0.92);
+    border-bottom-color: var(--border-default);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    gap: var(--space-4);
+  }
+
+  .header__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-weight: 700;
+    font-size: var(--text-h4);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .header__logo-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--gradient-accent);
+    color: #021a12;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--text-sm);
+    box-shadow: var(--glow-sm);
+  }
+
+  .header__nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .header__menu {
+    display: flex;
+    align-items: center;
+    gap: var(--space-5);
+  }
+
+  .header__link {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .header__link:hover {
+    color: var(--text-primary);
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .header__toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: var(--space-2);
+  }
+}
+
+@media (max-width: 991px) {
+  .header {
+    .header__toggle {
+      display: block;
+    }
+
+    .header__nav {
+      position: fixed;
+      top: 72px;
+      left: 0;
+      width: 100%;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-default);
+      padding: var(--space-6);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-4);
+      transform: translateY(-120%);
+      transition: transform var(--transition-base);
+    }
+
+    .header__nav--open {
+      transform: translateY(0);
+    }
+
+    .header__menu {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      gap: var(--space-3);
+    }
+  }
+}
+
+
+/* ==========================================================================
+   12. LANGUAGE SWITCHER (.lang-switcher)
+   ========================================================================== */
+
+.lang-switcher {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  padding: 2px 4px;
+
+  .lang-switcher__item {
+    padding: 2px 8px;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-muted);
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+
+    &.lang-switcher__item--active {
+      background: var(--accent-primary-muted);
+      color: var(--accent-primary);
+    }
+
+    &:hover:not(.lang-switcher__item--active) {
+      color: var(--text-primary);
+    }
+  }
+}
+
+
+/* ==========================================================================
+   13. HERO SECTION (.hero)
+   ========================================================================== */
+
+.hero {
+  padding: var(--space-20) 0 var(--space-16);
+  position: relative;
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .hero__status {
+    margin-bottom: var(--space-6);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-full);
+  }
+
+  .hero__title {
+    font-size: var(--text-display);
+    font-weight: var(--weight-display);
+    line-height: var(--leading-display);
+    letter-spacing: var(--tracking-tight);
+    margin-bottom: var(--space-6);
+    color: var(--text-primary);
+  }
+
+  .hero__title-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero__subtitle {
+    font-size: clamp(1.125rem, 1.2vw + 0.8rem, 1.35rem);
+    line-height: var(--leading-body);
+    color: var(--text-secondary);
+    margin-bottom: var(--space-8);
+    max-width: 680px;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-12);
+  }
+
+  .hero__terminal {
+    width: 100%;
+    max-width: 740px;
+    margin: 0 auto;
+    text-align: left;
+  }
+}
+
+
+/* ==========================================================================
+   14. WORKFLOW STEPS (.workflow-step)
+   ========================================================================== */
+
+.workflow-step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6);
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-base);
+
+  &:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-md), var(--glow-sm);
+  }
+
+  .workflow-step__num {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--accent-primary);
+    background: var(--accent-primary-subtle);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-4);
+  }
+
+  .workflow-step__title {
+    font-size: var(--text-h3);
+    margin-bottom: var(--space-2);
+    color: var(--text-primary);
+  }
+
+  .workflow-step__desc {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    line-height: var(--leading-body);
+  }
+}
+
+
+/* ==========================================================================
+   15. FAQ ACCORDION (.faq-item)
+   ========================================================================== */
+
+.faq-item {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
+
+  &.faq-item--open {
+    border-color: var(--border-accent);
+  }
+
+  .faq-item__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-6);
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: var(--text-h4);
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .faq-item__icon {
+    width: 20px;
+    height: 20px;
+    color: var(--accent-primary);
+    transition: transform var(--transition-base);
+    flex-shrink: 0;
+  }
+
+  &.faq-item--open .faq-item__icon {
+    transform: rotate(45deg);
+  }
+
+  .faq-item__content {
+    display: none;
+    padding: 0 var(--space-6) var(--space-5);
+    color: var(--text-secondary);
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+  }
+
+  &.faq-item--open .faq-item__content {
+    display: block;
+  }
+}
+
+
+/* ==========================================================================
+   16. CONTACT SECTION & FORM (.contact-form)
+   ========================================================================== */
+
+.contact-box {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+@media (min-width: 992px) {
+  .contact-box {
+    grid-template-columns: 1fr 1.3fr;
+  }
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  .contact-form__response {
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    display: none;
+
+    &.contact-form__response--success {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--color-success);
+      color: var(--color-success);
+    }
+
+    &.contact-form__response--error {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--color-error);
+      color: var(--color-error);
+    }
+  }
+}
+
+
+/* ==========================================================================
+   17. FOOTER (.footer)
+   ========================================================================== */
+
+.footer {
+  border-top: 1px solid var(--border-subtle);
+  background: var(--bg-inset);
+  padding: var(--space-12) 0 var(--space-8);
+
+  .footer__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .footer__inner {
+      flex-direction: row;
+      text-align: left;
+    }
+  }
+
+  .footer__copy {
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .footer__links {
+    display: flex;
+    gap: var(--space-4);
+  }
+}

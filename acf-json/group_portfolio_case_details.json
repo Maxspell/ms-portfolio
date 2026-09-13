@@ -1,0 +1,162 @@
+{
+    "key": "group_portfolio_case_details",
+    "title": "Деталі кейсу портфоліо",
+    "fields": [
+        {
+            "key": "field_case_niche",
+            "label": "Ніша / Напрямок",
+            "name": "case_niche",
+            "type": "text",
+            "instructions": "Наприклад: Автозапчастини & Дистрибуція, Фінансові технології, Медицина & Косметологія",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Фінансові технології",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_case_pagespeed",
+            "label": "Показник PageSpeed",
+            "name": "case_pagespeed",
+            "type": "text",
+            "instructions": "Бал швидкості Google PageSpeed, наприклад: 98 / 100",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "98 / 100",
+            "placeholder": "98 / 100",
+            "prepend": "⚡",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_case_preview_image",
+            "label": "Прев'ю-зображення кейсу (Скриншот інтерфейсу)",
+            "name": "case_preview_image",
+            "type": "image",
+            "instructions": "Зображення сайту/інтерфейсу (рекомендовано формат 16:9 або 16:10, WebP або JPG)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "medium",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": "jpg,jpeg,png,webp"
+        },
+        {
+            "key": "field_case_project_url",
+            "label": "Посилання на проєкт / Демо",
+            "name": "case_project_url",
+            "type": "url",
+            "instructions": "Посилання на живий сайт або інтерактивне демо (залиште порожнім, якщо NDA)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "https://example.com"
+        },
+        {
+            "key": "field_case_short_desc",
+            "label": "Короткий опис для картки",
+            "name": "case_short_desc",
+            "type": "textarea",
+            "instructions": "2-3 речення про суть проєкту, розв'язані задачі або досягнуті метрики.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "Кастомна тема для 45,000+ товарів...",
+            "maxlength": "",
+            "rows": 3,
+            "new_lines": ""
+        },
+        {
+            "key": "field_case_tech_stack",
+            "label": "Стек технологій (Теги)",
+            "name": "case_tech_stack",
+            "type": "repeater",
+            "instructions": "Додайте технології, використані в проєкті (ACF Pro, WooCommerce, REST API, Polylang тощо)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_case_tech_name",
+            "min": 0,
+            "max": 8,
+            "layout": "table",
+            "button_label": "+ Додати технологію",
+            "sub_fields": [
+                {
+                    "key": "field_case_tech_name",
+                    "label": "Назва технології / інструменту",
+                    "name": "tech_name",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 1,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "100",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "WooCommerce",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "portfolio"
+            }
+        ]
+    ],
+    "menu_order": 0,
+    "position": "normal",
+    "style": "seamless",
+    "label_placement": "top",
+    "instruction_placement": "label",
+    "hide_on_screen": "",
+    "active": true,
+    "description": "Поля для індивідуального кейсу портфоліо (типу запису portfolio)",
+    "show_in_rest": 1,
+    "modified": 1789304000
+}

@@ -1,0 +1,56 @@
+/* ==========================================================================
+   ANIMATIONS & MICRO-INTERACTIONS — ms-portfolio
+   ===========================================================================
+   Refined keyframe animations, glow drifts, radar pings and scroll reveals.
+   ========================================================================== */
+
+/* Keyframe: Ambient floating background glow */
+@keyframes ambient-glow {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate(20px, -20px) scale(1.08);
+    opacity: 0.25;
+  }
+}
+
+/* Keyframe: Shimmer effect on cards and borders */
+@keyframes border-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Keyframe: Fade in and slide up */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Utility animation classes */
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s var(--ease-out) forwards;
+}
+
+/* Interactive hover transitions for icons and badges */
+.hover-lift {
+  transition: transform var(--transition-spring), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}

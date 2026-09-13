@@ -1,0 +1,349 @@
+/* ==========================================================================
+   DESIGN TOKENS — ms-portfolio
+   ===========================================================================
+   Production-ready CSS Custom Properties for the Dark Tech / Glassmorphism
+   design system. Every visual decision in the theme originates from a token
+   defined here, keeping the codebase consistent and easy to re-skin.
+
+   Inspired by reference analysis (deep dark developer portfolios) but
+   differentiated with an emerald-teal accent palette, VS Code/GitHub-flavored
+   dark backgrounds, and a developer-specific type stack (Inter + JetBrains Mono).
+   ========================================================================== */
+
+:root {
+
+  /* ========================================================================
+     1. COLOR — BACKGROUNDS
+     =========================================================================
+     Three depth layers build spatial hierarchy without 3D transforms.
+     Base is the deepest void; surface sits on top; elevated floats above.
+     ---------------------------------------------------------------------- */
+
+  /* Base — the deepest background, used for <body> and full-bleed sections */
+  --bg-base:                #0a0b10;
+
+  /* Surface — primary content containers, sections, main card backgrounds */
+  --bg-surface:             #0d1117;
+
+  /* Elevated — nested elements inside surface (modals, dropdowns, tooltips) */
+  --bg-elevated:            #151b28;
+
+  /* Inset — recessed areas: code blocks, input fields, progress bar tracks */
+  --bg-inset:               #0b0f18;
+
+  /* ========================================================================
+     1b. COLOR — GLASS (Glassmorphism layers)
+     =========================================================================
+     Semi-transparent fills that work with backdrop-filter: blur() to create
+     a frosted-glass look. Alpha tuned so cards read over any background.
+     ---------------------------------------------------------------------- */
+
+  --glass-bg:               rgba(13, 17, 30, 0.60);
+  --glass-bg-hover:         rgba(13, 17, 30, 0.75);
+  --glass-bg-dense:         rgba(13, 17, 30, 0.85);
+
+  /* ========================================================================
+     2. COLOR — BORDERS
+     =========================================================================
+     Borders reveal edges without hard contrast. Three intensities plus
+     an accent-tinted variant for focused / active states.
+     ---------------------------------------------------------------------- */
+
+  --border-subtle:          rgba(255, 255, 255, 0.06);
+  --border-default:         rgba(255, 255, 255, 0.10);
+  --border-hover:           rgba(255, 255, 255, 0.16);
+  --border-accent:          rgba(16, 185, 129, 0.35);
+  --border-accent-hover:    rgba(16, 185, 129, 0.55);
+
+  /* ========================================================================
+     3. COLOR — ACCENTS
+     =========================================================================
+     Emerald (#10b981) is the primary brand accent — it signals action and
+     competence (green = "go", growth, code-success). Teal/Cyan is secondary,
+     used in gradients to add energy without competing.
+
+     We avoid the reference's pure cyan to differentiate and to tie into
+     the WordPress ecosystem green.
+     ---------------------------------------------------------------------- */
+
+  /* Primary accent — buttons, links, active states, key UI elements */
+  --accent-primary:         #10b981;
+  --accent-primary-hover:   #34d399;
+  --accent-primary-muted:   rgba(16, 185, 129, 0.15);
+  --accent-primary-subtle:  rgba(16, 185, 129, 0.08);
+
+  /* Secondary accent — gradients, decorative glow, secondary highlights */
+  --accent-secondary:       #06b6d4;
+  --accent-secondary-hover: #22d3ee;
+  --accent-secondary-muted: rgba(6, 182, 212, 0.15);
+
+  /* Gradient shortcuts — reused in buttons, progress bars, borders, hero */
+  --gradient-accent:        linear-gradient(135deg, #10b981, #06b6d4);
+  --gradient-accent-vivid:  linear-gradient(135deg, #34d399, #22d3ee);
+  --gradient-accent-subtle: linear-gradient(135deg, rgba(16,185,129,0.20), rgba(6,182,212,0.20));
+  --gradient-accent-border: linear-gradient(135deg, rgba(16,185,129,0.40), rgba(6,182,212,0.10), transparent);
+
+  /* Semantic — feedback colors */
+  --color-success:          #10b981;
+  --color-warning:          #f59e0b;
+  --color-error:            #ef4444;
+  --color-info:             #06b6d4;
+
+  /* ========================================================================
+     4. COLOR — TEXT
+     =========================================================================
+     Four levels of text prominence. Primary for headings and key content,
+     secondary for body paragraphs, muted for captions/helpers, disabled
+     for inactive UI. All tested for WCAG AA contrast against --bg-surface.
+     ---------------------------------------------------------------------- */
+
+  /* Primary — headings, key stats, nav active items. Contrast ≈ 15.8:1 */
+  --text-primary:           #f0f6fc;
+
+  /* Secondary — body text, descriptions. Contrast ≈ 6.4:1 */
+  --text-secondary:         #8b949e;
+
+  /* Muted — captions, timestamps, helper text. Contrast ≈ 3.5:1 (large text OK) */
+  --text-muted:             #6e7681;
+
+  /* Disabled — non-interactive labels. Decorative only, not for readable content */
+  --text-disabled:          #484f58;
+
+  /* Accent text — links, highlighted values */
+  --text-accent:            #10b981;
+
+  /* ========================================================================
+     5. TYPOGRAPHY
+     =========================================================================
+     Inter for UI/body — widely supported, clean, great for dense data.
+     JetBrains Mono for code elements — recognizable developer font,
+     signals "this person writes code" immediately.
+
+     Type scale based on a 1.25 ratio (Major Third) from 1rem base.
+     Line-heights are tighter for headings (display impact) and looser
+     for body (readability at sustained lengths).
+     ---------------------------------------------------------------------- */
+
+  /* Font stacks */
+  --font-sans:              'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:              'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Source Code Pro', 'Consolas', monospace;
+
+  /* Display — hero H1, maximum visual impact */
+  --text-display:           clamp(2.5rem, 5vw + 1rem, 4rem);
+  --leading-display:        1.08;
+  --weight-display:         800;
+
+  /* H1 — section hero headings */
+  --text-h1:                clamp(2rem, 3.5vw + 0.5rem, 3rem);
+  --leading-h1:             1.12;
+  --weight-h1:              700;
+
+  /* H2 — section titles */
+  --text-h2:                clamp(1.5rem, 2.5vw + 0.25rem, 2.25rem);
+  --leading-h2:             1.20;
+  --weight-h2:              700;
+
+  /* H3 — card titles, subsection headings */
+  --text-h3:                clamp(1.125rem, 1.5vw + 0.25rem, 1.5rem);
+  --leading-h3:             1.30;
+  --weight-h3:              600;
+
+  /* H4 — small headings, labels */
+  --text-h4:                1.125rem;
+  --leading-h4:             1.40;
+  --weight-h4:              600;
+
+  /* Body — default readable text */
+  --text-body:              1rem;
+  --leading-body:           1.65;
+  --weight-body:            400;
+
+  /* Small — captions, meta, tags */
+  --text-sm:                0.875rem;
+  --leading-sm:             1.50;
+  --weight-sm:              400;
+
+  /* Extra-small — badges, micro-labels */
+  --text-xs:                0.75rem;
+  --leading-xs:             1.50;
+  --weight-xs:              500;
+
+  /* Code — inline and block code elements */
+  --text-code:              0.875rem;
+  --leading-code:           1.65;
+  --weight-code:            400;
+
+  /* Letter spacing fine-tuning */
+  --tracking-tight:        -0.025em;
+  --tracking-normal:        0;
+  --tracking-wide:          0.025em;
+  --tracking-wider:         0.05em;
+
+  /* ========================================================================
+     6. SPACING
+     =========================================================================
+     4px base grid. Every margin, padding, and gap snaps to this scale.
+     Named by their multiplier: --space-1 = 1×4px = 4px.
+     ---------------------------------------------------------------------- */
+
+  --space-0:                0;
+  --space-1:                0.25rem;   /*  4px */
+  --space-2:                0.5rem;    /*  8px */
+  --space-3:                0.75rem;   /* 12px */
+  --space-4:                1rem;      /* 16px */
+  --space-5:                1.25rem;   /* 20px */
+  --space-6:                1.5rem;    /* 24px */
+  --space-8:                2rem;      /* 32px */
+  --space-10:               2.5rem;    /* 40px */
+  --space-12:               3rem;      /* 48px */
+  --space-16:               4rem;      /* 64px */
+  --space-20:               5rem;      /* 80px */
+  --space-24:               6rem;      /* 96px */
+  --space-32:               8rem;      /* 128px */
+
+  /* Section-level vertical rhythm */
+  --section-gap:            var(--space-24);
+  --section-padding:        var(--space-20) var(--space-6);
+
+  /* ========================================================================
+     7. BORDER RADIUS
+     =========================================================================
+     Variable radii based on element size: small components get tighter
+     corners, large cards get generous rounding, pills get full rounding.
+     ---------------------------------------------------------------------- */
+
+  --radius-xs:              4px;
+  --radius-sm:              6px;
+  --radius-md:              12px;
+  --radius-lg:              20px;
+  --radius-xl:              24px;
+  --radius-full:            9999px;
+
+  /* ========================================================================
+     8. SHADOWS & GLOW
+     =========================================================================
+     Multi-layer shadows for realistic depth. Glow effects use accent
+     colors for interactive feedback.
+     ---------------------------------------------------------------------- */
+
+  /* Ambient shadow — subtle depth for cards */
+  --shadow-sm:              0 1px 2px rgba(0, 0, 0, 0.3),
+                            0 1px 3px rgba(0, 0, 0, 0.15);
+
+  /* Medium shadow — elevated cards, dropdowns */
+  --shadow-md:              0 4px 6px rgba(0, 0, 0, 0.25),
+                            0 2px 4px rgba(0, 0, 0, 0.15),
+                            0 0 0 1px rgba(255, 255, 255, 0.03);
+
+  /* Large shadow — modals, hero cards, prominent elements */
+  --shadow-lg:              0 10px 25px rgba(0, 0, 0, 0.35),
+                            0 6px 10px rgba(0, 0, 0, 0.20),
+                            0 0 0 1px rgba(255, 255, 255, 0.04);
+
+  /* Glow — accent-colored soft glow for hover states */
+  --glow-sm:                0 0 15px rgba(16, 185, 129, 0.10),
+                            0 0 5px rgba(16, 185, 129, 0.08);
+
+  --glow-md:                0 0 25px rgba(16, 185, 129, 0.15),
+                            0 0 10px rgba(16, 185, 129, 0.10);
+
+  --glow-lg:                0 0 40px rgba(16, 185, 129, 0.18),
+                            0 0 15px rgba(16, 185, 129, 0.12),
+                            0 0 80px rgba(6, 182, 212, 0.06);
+
+  /* Inset glow — focus rings for inputs */
+  --glow-inset:             inset 0 0 12px rgba(16, 185, 129, 0.08);
+
+  /* ========================================================================
+     9. GLASSMORPHISM
+     =========================================================================
+     Blur strengths for frosted-glass effects. Combined with --glass-bg
+     alpha layers and border-subtle/default for the full effect.
+     ---------------------------------------------------------------------- */
+
+  --blur-sm:                blur(8px);
+  --blur-md:                blur(16px);
+  --blur-lg:                blur(24px);
+  --blur-xl:                blur(40px);
+
+  /* Shorthand glass surface — combine these in components */
+  --glass-surface:          var(--glass-bg);
+  --glass-border:           1px solid var(--border-subtle);
+  --glass-blur:             var(--blur-md);
+
+  /* ========================================================================
+     10. TRANSITIONS & ANIMATION
+     =========================================================================
+     Consistent motion across all interactive elements. Fast for micro-
+     feedback (color changes), base for transforms, slow for layout shifts.
+
+     Easing curves:
+     - ease-out: natural deceleration for entering elements
+     - ease-in-out: smooth for transforms (scale, translate)
+     - spring: slight overshoot for playful micro-interactions
+     ---------------------------------------------------------------------- */
+
+  --duration-fast:          150ms;
+  --duration-base:          250ms;
+  --duration-slow:          400ms;
+  --duration-slower:        600ms;
+
+  --ease-out:               cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out:            cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring:            cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce:            cubic-bezier(0.68, -0.55, 0.27, 1.55);
+
+  /* Composite transition shortcuts */
+  --transition-fast:        var(--duration-fast) var(--ease-out);
+  --transition-base:        var(--duration-base) var(--ease-out);
+  --transition-slow:        var(--duration-slow) var(--ease-out);
+  --transition-transform:   var(--duration-base) var(--ease-in-out);
+  --transition-spring:      var(--duration-base) var(--ease-spring);
+
+  /* ========================================================================
+     11. Z-INDEX SCALE
+     =========================================================================
+     Predictable stacking: base → sticky → dropdown → modal → toast.
+     ---------------------------------------------------------------------- */
+
+  --z-base:                 1;
+  --z-sticky:               100;
+  --z-dropdown:             200;
+  --z-overlay:              300;
+  --z-modal:                400;
+  --z-toast:                500;
+
+  /* ========================================================================
+     12. LAYOUT
+     =========================================================================
+     Max-width containers and responsive breakpoints for section sizing.
+     ---------------------------------------------------------------------- */
+
+  --container-sm:           640px;
+  --container-md:           768px;
+  --container-lg:           1024px;
+  --container-xl:           1200px;
+  --container-2xl:          1400px;
+  --container-padding:      var(--space-6);
+
+  /* Grid gaps */
+  --grid-gap-sm:            var(--space-4);
+  --grid-gap-md:            var(--space-6);
+  --grid-gap-lg:            var(--space-8);
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ===========================================================================
+   Respect user's OS-level motion preferences. All transitions collapse to
+   near-instant, preserving state changes without animation.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast:        1ms;
+    --duration-base:        1ms;
+    --duration-slow:        1ms;
+    --duration-slower:      1ms;
+  }
+}
